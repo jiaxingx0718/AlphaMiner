@@ -1,0 +1,111 @@
+from __future__ import annotations
+
+from expressions.expression import (
+    ABS,
+    ADD,
+    AMOUNT,
+    BINMAX,
+    BINMIN,
+    CLOSE,
+    CSRANK,
+    DELTA,
+    DIV,
+    EMA,
+    EXP,
+    HIGH,
+    LOG,
+    LOW,
+    MA,
+    MAX,
+    MED,
+    MIN,
+    MUL,
+    OPEN,
+    PAST,
+    POW,
+    RANK,
+    SIGN,
+    SKEW,
+    STD,
+    SUB,
+    SUM,
+    VOLUME,
+    WMA,
+    Constant,
+)
+
+
+def build_default_expression_zoo():
+    """
+    A compact expression zoo used to train or sanity-check the AlphaForge-style
+    evaluator on top of the current AlphaMiner expression system.
+
+    The goal is not to be exhaustive. We want enough variety to cover:
+    - raw features
+    - unary transforms
+    - binary price/volume interactions
+    - rolling operators
+    - shallow nested structures
+    """
+
+    return [
+        CLOSE,
+        OPEN,
+        HIGH,
+        LOW,
+        VOLUME,
+        AMOUNT,
+        Constant(-5.0),
+        Constant(-1.0),
+        Constant(0.0),
+        Constant(1.0),
+        Constant(5.0),
+        LOG(CLOSE),
+        LOG(AMOUNT),
+        ABS(LOW),
+        ABS(CLOSE),
+        SIGN(HIGH),
+        SIGN(SUB(CLOSE, OPEN)),
+        EXP(SUB(CLOSE, OPEN)),
+        CSRANK(AMOUNT),
+        CSRANK(VOLUME),
+        ADD(CLOSE, OPEN),
+        SUB(HIGH, LOW),
+        MUL(CLOSE, VOLUME),
+        DIV(AMOUNT, VOLUME),
+        DIV(CLOSE, OPEN),
+        BINMAX(HIGH, OPEN),
+        BINMIN(LOW, CLOSE),
+        MUL(ABS(SUB(CLOSE, OPEN)), ABS(SUB(CLOSE, OPEN))),
+        MA(CLOSE, 5),
+        MA(CLOSE, 10),
+        MA(VOLUME, 5),
+        WMA(CLOSE, 5),
+        EMA(CLOSE, 10),
+        SUM(VOLUME, 5),
+        STD(CLOSE, 5),
+        SKEW(AMOUNT, 10),
+        MAX(HIGH, 10),
+        MIN(LOW, 10),
+        MED(CLOSE, 5),
+        RANK(VOLUME, 10),
+        PAST(CLOSE, 5),
+        DELTA(CLOSE, 5),
+        DELTA(AMOUNT, 10),
+        LOG(MA(CLOSE, 5)),
+        LOG(ABS(LOW)),
+        SUB(MA(CLOSE, 5), CLOSE),
+        ADD(MA(CLOSE, 5), OPEN),
+        DIV(MA(CLOSE, 5), OPEN),
+        MUL(SUB(HIGH, LOW), VOLUME),
+        DIV(DELTA(CLOSE, 5), OPEN),
+        LOG(DIV(AMOUNT, VOLUME)),
+        ADD(CSRANK(AMOUNT), SIGN(SUB(CLOSE, OPEN))),
+        SUB(BINMAX(HIGH, OPEN), BINMIN(LOW, CLOSE)),
+        EMA(LOG(MAX(LOW, 5)), 10),
+        ABS(STD(PAST(CLOSE, 20), 5)),
+        SUB(BINMIN(MUL(CLOSE, HIGH), EMA(LOW, 5)), CLOSE),
+        LOG(ADD(AMOUNT, BINMIN(OPEN, AMOUNT))),
+        MUL(BINMAX(LOW, OPEN), Constant(1.0)),
+        DIV(LOG(SUB(LOW, VOLUME)), OPEN),
+    ]
