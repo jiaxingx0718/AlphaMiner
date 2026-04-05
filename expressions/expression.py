@@ -467,6 +467,16 @@ class DELTA(PastOperator):
 
 
 class PairRollingOperator(Expression):
+    """
+    双变量滚动算子基类
+    对包含 t 日在内的过去 window 长度窗口做聚合
+    包括:
+    - COV
+    - CORR
+    - REG
+
+    """
+
     pass
 
 
